@@ -49,41 +49,36 @@ export default function ScheduleAppointment() {
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-    setError("");
-  };
-
-  const isFutureDateTime = () => {
-    const selectedDateTime = new Date(`${form.date}T${form.time}`);
-    const now = new Date();
-    return selectedDateTime > now;
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
-
-    // 1️⃣ Required fields
-    if (!form.doctor || !form.date || !form.time || !form.type) {
+    setError("");
+  
+    const { doctor, date, time, type } = form;
+  
+    if (!doctor || !date || !time || !type) {
       setError("All fields are required");
       return;
     }
-
-    // 2️⃣ Future date & time check
-    if (!isFutureDateTime()) {
+  
+    // Combine date + time
+    const selectedDateTime = new Date(`${date}T${time}`);
+    const now = new Date();
+  
+    if (selectedDateTime <= now) {
       setError("Please select a future date and time");
       return;
     }
-
+  
     try {
       await api.post("/appointments", form);
       alert("Appointment scheduled successfully");
       navigate("/appointments");
     } catch (err) {
-      console.error("Error scheduling appointment", err);
-      alert("Failed to schedule appointment");
+      console.error(err);
+      setError("Failed to schedule appointment");
     }
   };
+  
 
   const doctorOptions = doctors.map((doc: any) => ({
     value: doc._id,
