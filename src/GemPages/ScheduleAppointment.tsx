@@ -54,6 +54,8 @@ export default function ScheduleAppointment() {
     setError("");
   
     const { doctor, date, time, type } = form;
+
+    console.log("formdata ", form);
   
     if (!doctor || !date || !time || !type) {
       setError("All fields are required");
@@ -116,14 +118,16 @@ export default function ScheduleAppointment() {
               <Select
   options={doctorOptions}
   placeholder="Select Doctor"
-  onChange={(selected: any) => {
+  onChange={(value: string) => {
     setForm(prev => ({
       ...prev,
-      doctor: selected?.value || "",
+      doctor: value,
     }));
   }}
   className="dark:bg-dark-900"
 />
+
+
 
 
             </div>
@@ -201,10 +205,10 @@ export default function ScheduleAppointment() {
               <Select
   options={appointmentTypeOptions}
   placeholder="Select Appointment Type"
-  onChange={(selected: any) => {
+  onChange={(value: string) => {
     setForm(prev => ({
       ...prev,
-      type: selected?.value || "",
+      type: value,
     }));
   }}
   className="dark:bg-dark-900"
