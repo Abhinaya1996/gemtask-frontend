@@ -5,7 +5,7 @@ export default function ProtectedRoute({ children }: any) {
   const { isAuthenticated } = useAuth();
 
   if (!isAuthenticated) {
-    return <Navigate to="/Telehealth/signin" replace />;
+    return <Navigate to="/signin" replace />;
   }
 
   return children;

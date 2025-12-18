@@ -12,13 +12,13 @@ export const AuthProvider = ({ children }: any) => {
   const login = () => {
     localStorage.setItem("isAuth", "true");
     setIsAuthenticated(true);
-    navigate("/Telehealth/");
+    navigate("/");
   };
 
   const logout = () => {
     localStorage.removeItem("isAuth");
     setIsAuthenticated(false);
-    navigate("/Telehealth/signin");
+    navigate("/signin");
   };
 
   return (
