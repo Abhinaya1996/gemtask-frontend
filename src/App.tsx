@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import SignIn from "./pages/AuthPages/SignIn";
 import SignUp from "./pages/AuthPages/SignUp";
 import NotFound from "./pages/OtherPage/NotFound";
@@ -11,33 +11,34 @@ import VideoCall from "./GemPages/VideoCall";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 
-
 export default function App() {
   return (
     <>
-      <Router>
-        <ScrollToTop />
-        <AuthProvider>
-          <Routes>
-            <Route path="/Telehealth/" element={ <ProtectedRoute> <AppLayout /> </ProtectedRoute> }>
+      <ScrollToTop />
 
-              <Route index element={<Appointments />} />
-              <Route path="appointments" element={<Appointments />} />
-              <Route path="schedule-appointment" element={<ScheduleAppointment />} />
-              <Route path="prescriptions" element={<Prescriptions />} />
-              <Route path="video-call" element={<VideoCall />} />
+      <AuthProvider>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <AppLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<Appointments />} />
+            <Route path="appointments" element={<Appointments />} />
+            <Route path="schedule-appointment" element={<ScheduleAppointment />} />
+            <Route path="prescriptions" element={<Prescriptions />} />
+            <Route path="video-call" element={<VideoCall />} />
+          </Route>
 
-            </Route>
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/signup" element={<SignUp />} />
 
-            {/* Auth Layout */}
-            <Route path="/Telehealth/signin" element={<SignIn />} />
-            <Route path="/Telehealth/signup" element={<SignUp />} />
-
-            {/* Fallback Route */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </AuthProvider>
-      </Router>
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </AuthProvider>
     </>
   );
 }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import PageBreadcrumb from "../components/common/PageBreadCrumb";
 import ComponentCard from "../components/common/ComponentCard";
 import PageMeta from "../components/common/PageMeta";
@@ -24,13 +24,26 @@ export default function ScheduleAppointment() {
   const fetchDoctors = async () => {
     try {
       const res = await api.get("/doctors");
-      setDoctors(res.data);
+  
+      // ✅ normalize API response safely
+      const doctorsArray =
+        Array.isArray(res.data)
+          ? res.data
+          : Array.isArray(res.data?.data)
+          ? res.data.data
+          : Array.isArray(res.data?.doctors)
+          ? res.data.doctors
+          : [];
+  
+      setDoctors(doctorsArray);
     } catch (err) {
       console.error("Failed to load doctors", err);
+      setDoctors([]);
     } finally {
       setLoading(false);
     }
   };
+  
 
   const handleChange = (e: any) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -47,7 +60,7 @@ export default function ScheduleAppointment() {
     try {
       await api.post("/appointments", form);
       alert("Appointment scheduled successfully");
-      navigate("/Telehealth/appointments");
+      navigate("/appointments");
     } catch (err) {
       console.error("Error scheduling appointment", err);
       alert("Failed to schedule appointment");

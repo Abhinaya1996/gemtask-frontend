@@ -15,13 +15,26 @@ export default function Prescriptions() {
   const fetchPrescriptions = async () => {
     try {
       const res = await api.get("/prescriptions");
-      setPrescriptions(res.data);
+  
+      // ✅ normalize API response
+      const prescriptionsArray =
+        Array.isArray(res.data)
+          ? res.data
+          : Array.isArray(res.data?.data)
+          ? res.data.data
+          : Array.isArray(res.data?.prescriptions)
+          ? res.data.prescriptions
+          : [];
+  
+      setPrescriptions(prescriptionsArray);
     } catch (err) {
       console.error("Error fetching prescriptions", err);
+      setPrescriptions([]);
     } finally {
       setLoading(false);
     }
   };
+  
 
   return (
     <>

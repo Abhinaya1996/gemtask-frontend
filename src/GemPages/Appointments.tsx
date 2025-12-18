@@ -5,7 +5,7 @@ import PageMeta from "../components/common/PageMeta";
 import api from "../api/api";
 
 export default function Appointments() {
-  const [appointments, setAppointments] = useState([]);
+  const [appointments, setAppointments] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -15,9 +15,20 @@ export default function Appointments() {
   const fetchAppointments = async () => {
     try {
       const res = await api.get("/appointments");
-      setAppointments(res.data);
+
+      // ✅ Normalize API response (VERY IMPORTANT)
+      if (Array.isArray(res.data)) {
+        setAppointments(res.data);
+      } else if (Array.isArray(res.data.appointments)) {
+        setAppointments(res.data.appointments);
+      } else if (Array.isArray(res.data.data)) {
+        setAppointments(res.data.data);
+      } else {
+        setAppointments([]);
+      }
     } catch (error) {
       console.error("Error fetching appointments", error);
+      setAppointments([]);
     } finally {
       setLoading(false);
     }
@@ -55,10 +66,14 @@ export default function Appointments() {
                     <td className="p-3">
                       {appt.doctor?.name || "—"}
                     </td>
-                    <td className="p-3">{appt.date}</td>
-                    <td className="p-3">{appt.time}</td>
-                    <td className="p-3 capitalize">{appt.type}</td>
-                    <td className="p-3 capitalize">{appt.status}</td>
+                    <td className="p-3">
+                      {appt.date
+                        ? new Date(appt.date).toLocaleDateString()
+                        : "—"}
+                    </td>
+                    <td className="p-3">{appt.time || "—"}</td>
+                    <td className="p-3 capitalize">{appt.type || "—"}</td>
+                    <td className="p-3 capitalize">{appt.status || "—"}</td>
                   </tr>
                 ))}
               </tbody>
