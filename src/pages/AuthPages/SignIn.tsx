@@ -1,19 +1,26 @@
+import api from "../../api/api";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { useAuth } from "../../context/AuthContext";
 
 export default function SignIn() {
-  const { login } = useAuth();
-
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleLogin = () => {
-    // hardcoded credentials
-    if (email === "test@gmail.com" && password === "pass@123") {
-      setError("");
-      login();
-    } else {
+  const handleLogin = async (e: any) => {
+    e.preventDefault();
+    setError("");
+
+    try {
+      const res = await api.post("/auth/login", {
+        email,
+        password,
+      });
+
+      localStorage.setItem("token", res.data.access_token);
+      navigate("/appointments");
+    } catch (err: any) {
       setError("Invalid email or password");
     }
   };
@@ -24,6 +31,8 @@ export default function SignIn() {
         <h2 className="text-xl font-bold mb-4 text-center">
           TeleHealth Admin Login
         </h2>
+        <form onSubmit={handleLogin}>
+        {error && <p className="text-red-500">{error}</p>}
 
         <input
           type="email"
@@ -46,16 +55,18 @@ export default function SignIn() {
         )}
 
         <button
-          onClick={handleLogin}
+          type="submit"
           className="w-full bg-brand-500 text-white p-2 rounded hover:bg-brand-600"
         >
           Login
         </button>
 
+        </form>
+
         <p className="text-xs text-gray-500 mt-4 text-center">
           Demo Credentials: <br />
-          <b>Email:</b> test@gmail.com <br />
-          <b>Password:</b> pass@123
+          <b>Email:</b> patient@test.com <br />
+          <b>Password:</b> password123
         </p>
       </div>
     </div>

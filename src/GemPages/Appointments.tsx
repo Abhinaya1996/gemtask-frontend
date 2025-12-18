@@ -3,6 +3,8 @@ import PageBreadcrumb from "../components/common/PageBreadCrumb";
 import ComponentCard from "../components/common/ComponentCard";
 import PageMeta from "../components/common/PageMeta";
 import api from "../api/api";
+import DataTable from "react-data-table-component";
+
 
 export default function Appointments() {
   const [appointments, setAppointments] = useState<any[]>([]);
@@ -34,6 +36,32 @@ export default function Appointments() {
     }
   };
 
+  const columns = [
+    {
+      name: "Doctor",
+      selector: (row: any) => row.doctor?.name || "—",
+      sortable: true,
+    },
+    {
+      name: "Date",
+      selector: (row: any) => row.date,
+      sortable: true,
+    },
+    {
+      name: "Time",
+      selector: (row: any) => row.time,
+    },
+    {
+      name: "Type",
+      selector: (row: any) => row.type,
+    },
+    {
+      name: "Status",
+      selector: (row: any) => row.status,
+    },
+  ];
+  
+
   return (
     <>
       <PageMeta
@@ -50,34 +78,16 @@ export default function Appointments() {
           <p className="text-sm text-gray-500">No appointments found</p>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full border-collapse">
-              <thead>
-                <tr className="border-b text-left">
-                  <th className="p-3">Doctor</th>
-                  <th className="p-3">Date</th>
-                  <th className="p-3">Time</th>
-                  <th className="p-3">Type</th>
-                  <th className="p-3">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {appointments.map((appt: any) => (
-                  <tr key={appt._id} className="border-b">
-                    <td className="p-3">
-                      {appt.doctor?.name || "—"}
-                    </td>
-                    <td className="p-3">
-                      {appt.date
-                        ? new Date(appt.date).toLocaleDateString()
-                        : "—"}
-                    </td>
-                    <td className="p-3">{appt.time || "—"}</td>
-                    <td className="p-3 capitalize">{appt.type || "—"}</td>
-                    <td className="p-3 capitalize">{appt.status || "—"}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+
+            <DataTable
+              columns={columns}
+              data={appointments}
+              pagination
+              highlightOnHover
+              striped
+              responsive
+            />
+
           </div>
         )}
       </ComponentCard>

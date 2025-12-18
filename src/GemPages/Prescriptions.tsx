@@ -3,6 +3,7 @@ import PageBreadcrumb from "../components/common/PageBreadCrumb";
 import ComponentCard from "../components/common/ComponentCard";
 import PageMeta from "../components/common/PageMeta";
 import api from "../api/api";
+import DataTable from "react-data-table-component";
 
 export default function Prescriptions() {
   const [prescriptions, setPrescriptions] = useState([]);
@@ -34,6 +35,35 @@ export default function Prescriptions() {
       setLoading(false);
     }
   };
+
+  const columns = [
+    {
+      name: "Medication",
+      selector: (row: any) => row.medicationName,
+      sortable: true,
+    },
+    {
+      name: "Dosage",
+      selector: (row: any) => row.dosage,
+    },
+    {
+      name: "Frequency",
+      selector: (row: any) => row.frequency,
+    },
+    {
+      name: "Start Date",
+      selector: (row: any) => row.startDate,
+    },
+    {
+      name: "End Date",
+      selector: (row: any) => row.endDate,
+    },
+    {
+      name: "Doctor",
+      selector: (row: any) => row.doctorName,
+    },
+  ];
+  
   
 
   return (
@@ -54,30 +84,15 @@ export default function Prescriptions() {
           </p>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full border-collapse">
-              <thead>
-                <tr className="border-b text-left">
-                  <th className="p-3">Medication</th>
-                  <th className="p-3">Dosage</th>
-                  <th className="p-3">Frequency</th>
-                  <th className="p-3">Start Date</th>
-                  <th className="p-3">End Date</th>
-                  <th className="p-3">Doctor</th>
-                </tr>
-              </thead>
-              <tbody>
-                {prescriptions.map((item: any) => (
-                  <tr key={item._id} className="border-b">
-                    <td className="p-3">{item.medicationName}</td>
-                    <td className="p-3">{item.dosage}</td>
-                    <td className="p-3">{item.frequency}</td>
-                    <td className="p-3">{item.startDate}</td>
-                    <td className="p-3">{item.endDate}</td>
-                    <td className="p-3">{item.doctorName}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <DataTable
+              columns={columns}
+              data={prescriptions}
+              pagination
+              highlightOnHover
+              striped
+              responsive
+            />
+
           </div>
         )}
       </ComponentCard>

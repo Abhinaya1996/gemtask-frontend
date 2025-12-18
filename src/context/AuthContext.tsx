@@ -1,31 +1,37 @@
-import { createContext, useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { createContext, useContext, useState, ReactNode } from "react";
 
-const AuthContext = createContext<any>(null);
+type AuthContextType = {
+  token: string | null;
+  login: (token: string) => void;
+  logout: () => void;
+};
 
-export const AuthProvider = ({ children }: any) => {
-  const navigate = useNavigate();
-  const [isAuthenticated, setIsAuthenticated] = useState(
-    localStorage.getItem("isAuth") === "true"
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const [token, setToken] = useState<string | null>(
+    localStorage.getItem("token")
   );
 
-  const login = () => {
-    localStorage.setItem("isAuth", "true");
-    setIsAuthenticated(true);
-    navigate("/");
+  const login = (newToken: string) => {
+    localStorage.setItem("token", newToken);
+    setToken(newToken);
   };
 
   const logout = () => {
-    localStorage.removeItem("isAuth");
-    setIsAuthenticated(false);
-    navigate("/signin");
+    localStorage.removeItem("token");
+    setToken(null);
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ token, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error("useAuth must be used inside AuthProvider");
+  return ctx;
+};
