@@ -73,7 +73,5 @@ Database: MongoDB Atlas
 <!-- ----------- -->
 VITE_API_BASE_URL=https://gemtask.onrender.com
 
-<!-- ------------- -->
-Screenshots of
-<!-- -------------- -->
+
 
