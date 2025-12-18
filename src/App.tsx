@@ -1,10 +1,9 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import SignIn from "./pages/AuthPages/SignIn";
 import SignUp from "./pages/AuthPages/SignUp";
 import NotFound from "./pages/OtherPage/NotFound";
 import AppLayout from "./layout/AppLayout";
 import { ScrollToTop } from "./components/common/ScrollToTop";
-import Home from "./pages/Dashboard/Home";
 import Appointments from "./GemPages/Appointments";
 import ScheduleAppointment from "./GemPages/ScheduleAppointment";
 import Prescriptions from "./GemPages/Prescriptions";
@@ -20,8 +19,6 @@ export default function App() {
         <ScrollToTop />
         <AuthProvider>
           <Routes>
-            {/* Dashboard Layout */}
-            {/* <Route path="/Telehealth/" element={<AppLayout />}> */}
             <Route path="/Telehealth/" element={ <ProtectedRoute> <AppLayout /> </ProtectedRoute> }>
 
               <Route index element={<Appointments />} />
