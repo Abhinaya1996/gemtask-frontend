@@ -60,11 +60,11 @@ export default function ScheduleAppointment() {
       return;
     }
   
-    // Combine date + time
-    const selectedDateTime = new Date(`${date}T${time}`);
-    const now = new Date();
+    const selectedDateTime = new Date(date);
+    const [hours, minutes] = time.split(":");
+    selectedDateTime.setHours(Number(hours), Number(minutes), 0, 0);
   
-    if (selectedDateTime <= now) {
+    if (selectedDateTime <= new Date()) {
       setError("Please select a future date and time");
       return;
     }
@@ -78,6 +78,7 @@ export default function ScheduleAppointment() {
       setError("Failed to schedule appointment");
     }
   };
+  
   
 
   const doctorOptions = doctors.map((doc: any) => ({
@@ -113,13 +114,18 @@ export default function ScheduleAppointment() {
             <div>
               <label className="block mb-1">Doctor</label>
               <Select
-                options={doctorOptions}
-                placeholder="Select Doctor"
-                onChange={(selected: any) =>
-                  setForm({ ...form, doctor: selected?.value || "" })
-                }
-                className="dark:bg-dark-900"
-              />
+  options={doctorOptions}
+  placeholder="Select Doctor"
+  onChange={(selected: any) => {
+    setForm(prev => ({
+      ...prev,
+      doctor: selected?.value || "",
+    }));
+  }}
+  className="dark:bg-dark-900"
+/>
+
+
             </div>
 
             {/* Date */}
@@ -193,13 +199,18 @@ export default function ScheduleAppointment() {
             <div>
               <label className="block mb-1">Appointment Type</label>
               <Select
-    options={appointmentTypeOptions}
-    placeholder="Select Appointment Type"
-    onChange={(selected: any) =>
-      setForm({ ...form, type: selected?.value || "" })
-    }
-    className="dark:bg-dark-900"
-  />
+  options={appointmentTypeOptions}
+  placeholder="Select Appointment Type"
+  onChange={(selected: any) => {
+    setForm(prev => ({
+      ...prev,
+      type: selected?.value || "",
+    }));
+  }}
+  className="dark:bg-dark-900"
+/>
+
+
             </div>
 
             <button

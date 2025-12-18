@@ -1,8 +1,5 @@
 {
   "rewrites": [
-    {
-      "source": "/Telehealth/(.*)",
-      "destination": "/index.html"
-    }
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
